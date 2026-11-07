@@ -1,28 +1,7 @@
-"""
-=====================================================================
- MULTIPLE THREADS PERFORMING DIFFERENT TASKS CONCURRENTLY
- Tools used : threading.Thread, threading.Lock, join(), time.sleep()
-=====================================================================
-IN PLAIN ENGLISH:
- Think of a kitchen with three cooks. One chops vegetables, one boils
- rice, one makes tea. They all work AT THE SAME TIME, so dinner is
- ready in the time of the SLOWEST job, not the sum of all three.
- A thread is one "cook". Our program starts several threads, each
- doing a DIFFERENT task, waits for all of them to finish (join), and
- uses a Lock so that two threads never scribble in the shared
- notebook (the results list) at the same moment.
-=====================================================================
-"""
 import threading
 import time
 import tempfile
 import os
-
-# ---------------------------------------------------------------------
-# SHARED STATE (every thread can see these)
-# Plain English: a common notebook + a "talking stick" (Lock). Only the
-# thread holding the stick may write in the notebook.
-# ---------------------------------------------------------------------
 results = []
 results_lock = threading.Lock()
 START = time.perf_counter()
@@ -36,10 +15,6 @@ def record(task_name, message):
         results.append(line)
         print(line)
 
-
-# ---------------------------------------------------------------------
-# THREE DIFFERENT TASKS
-# ---------------------------------------------------------------------
 def compute_squares(n=5):
     """Task 1 - a CPU style job: compute squares step by step."""
     record("Compute", "started")
@@ -66,10 +41,6 @@ def fake_download(name="report.pdf", seconds=1.0):
     time.sleep(seconds)
     record("Download", f"finished {name}")
 
-
-# ---------------------------------------------------------------------
-# RUNNERS: one-after-another vs all-together
-# ---------------------------------------------------------------------
 def run_sequential(path):
     t0 = time.perf_counter()
     compute_squares()
